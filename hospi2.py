@@ -24,15 +24,17 @@ import matplotlib.pyplot as plt
 import matplotlib
 import numpy as np
 
-cdf=[]
+
+
+
+cdf=[] #The values for the cummulative distribution function between the hospitalized interval, at different "real cases" numbers.
 realcases=[]
-pmf=[]
-totalprob=0
-norma=0
+totalprob=0 #The total probability along the interfal of "real cases"
+P_H=0 # The normalizacion factor P(H)
 
 print("This is a _TOY_ program that gives a bayesian estimate for the real cases of COVID-19 in the country, given the hospitalized people. It's only meant for teaching statistics and the like. Also, it could be buggy.\n\n")
 
-
+#Python 3 only.
 #The goal is to obtain P(T.C.|H). T.C.=total cases, H=hospitalized/serious-critical cases.
 #We take a uniform prior, as we have no reason to think anything about P(T.C) a priori.
 #P(H|T.C) is just a binomial distro, with T.C. trials and H "successes" (not the best word, probably).
@@ -67,20 +69,19 @@ rc=[args.RL,args.RU] #limits for real cases we want to test
 
 
 
-
-cdfbars=[]
+cdfbars=[] #These are only the values for the CDF in our interval of interest.
 
 for j in range(0,rc[1]+5000):
-    cdf.append(scipy.stats.binom.cdf(args.hupp,n=j,p=args.serious)-scipy.stats.binom.cdf(args.hlow,n=j,p=args.serious))
-    norma=norma+cdf[-1] #The normalization factor is P(H), the probability of being hospitalized regardless of the number of cases (it's actually the same as the success rate of the binomial distro we use, but I calculated explicitly anyway).
+    cdf.append(scipy.stats.binom.cdf(args.hupp,n=j,p=args.serious)-scipy.stats.binom.cdf(args.hlow,n=j,p=args.serious)) #For each "real cases" value we obtain the total probability of finding H within the given interval (i.e. we obtain P(H|T.C.) for each value of T.C. 
+    P_H=P_H+cdf[-1] #P(H), the probability of being hospitalized regardless of the number of cases (it's actually the same as the success rate of the binomial distro we use, but I calculated explicitly anyway).
     cdfbars.append(0)
     if j>=rc[0] and j<=rc[1]:
-        totalprob=totalprob+cdf[-1] ## P(H|T.C.)
+        totalprob=totalprob+cdf[-1] ## P(H|T.C.) We only add the values within the wanted interval of T.C., thus getting 
         cdfbars[-1]=cdf[-1]
-    realcases.append(j)
+    realcases.append(j) #just keep al the real cases values to use them as X axes in plotting.
 
 
-print("The estimated probability for there being between %d and %d real cases when between %d and %d hospitalized people (serious and critical cases) are observed, and with a %5.3f%% of true serious cases is of:\n%5.3f"%(args.RL,args.RU,args.hlow,args.hupp,args.serious*100,totalprob/norma))
+print("The estimated probability for there being between %d and %d real cases when between %d and %d hospitalized people (serious and critical cases) are observed, and with a %5.3f%% of true serious cases is of:\n%5.3f"%(args.RL,args.RU,args.hlow,args.hupp,args.serious*100,totalprob/P_H))
 
 #plt.hist(cdfbars,bins=realcases, facecolor='g', alpha=0.75)
 #plt.plot(realcases,cdf)
