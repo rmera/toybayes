@@ -44,13 +44,15 @@ print("This is a _TOY_ program that gives a bayesian estimate for the real cases
 
 #we also plot P(T.C.|H) vs T.C. and fill only the part correpsonding to our interval of interest.
 
+#Of course, you can use this for any P(X|C) where P(C|X) is binomial and the prior can be taken as uniform :-D
+
 parser = argparse.ArgumentParser()
     
 
 parser.add_argument("RL", type=int, default=0, help="Lower limit for real cases")
 parser.add_argument("RU", type=int, default=9000, help="Upper limit for real cases")
 
-parser.add_argument("-s", "--serious", type=int,default=0.01, help="True probability of serious cases. Default taken from s. Korea.")
+parser.add_argument("-s", "--serious", type=float,default=0.01, help="True probability of serious cases. Default taken from s. Korea.")
 
 parser.add_argument("-l", "--hlow", type=float,default=32.0, help="Lower limit for the hospitaized people in the country")
 
