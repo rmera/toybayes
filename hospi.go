@@ -22,7 +22,7 @@ import (
 
 //This has a lot of "teaching" comments.
 func bayes(par param) error {
-	fmt.Println("Educational Bayes program")
+	//fmt.Println("Educational Bayes program")
 
 	//***********The next 4 variabes are for plotting only
 	//c is the upper limit for the plot, which we will take as the upper limit for our interval of interest (Pu) plus 5000.
@@ -68,7 +68,7 @@ func bayes(par param) error {
 	totalprob := integratedPHCT / PH
 
 	//We now print the answer
-	fmt.Printf("The probability of having P(TC|H) in the range %d-%d, for H between %3.2f-%3.2f, with a true p for P(H|TC) of %4.3f is: %6.4f\n", par.Pl, par.Pu, par.Cl, par.Cu, par.Tp, totalprob)
+	//fmt.Printf("The probability of having P(TC|H) in the range %d-%d, for H between %3.2f-%3.2f, with a true p for P(H|TC) of %4.3f is: %6.4f\n", par.Pl, par.Pu, par.Cl, par.Cu, par.Tp, totalprob)
 
 	//Now the plot.
 	err := plottingFuncCuatica(realcases, realcases[par.Pl:par.Pu+1], cdf, cdfbars, par.Cl, par.Cu, totalprob)
@@ -87,7 +87,7 @@ func plottingFuncCuatica(x1, x2, y1, y2 []float64, h1, h2, totalprob float64) er
 	if err != nil {
 		return err
 	}
-	p.Title.Text = fmt.Sprintf("Probability for P(TC|H) if H is between %2.1f-%2.1f\n The integrated probability in requested (red) interval is of: %3.2f", h1, h2, totalprob)
+	p.Title.Text = fmt.Sprintf("La probabilidad para TC entre 0-%2.1f, dado H %2.1f-%2.1f.\n La integral en el intervalo seleccionado (%2.1f-%2.1f) es: %3.2f", x1[len(x1)-1], h1, h2, x2[0], x2[len(x2)-1], totalprob)
 	p.X.Label.Text = "TC|H"
 	p.Y.Label.Text = "Prob."
 	//fmt.Println(y1)     ///////////////////
