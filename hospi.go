@@ -87,7 +87,7 @@ func plottingFuncCuatica(x1, x2, y1, y2 []float64, h1, h2, totalprob float64) er
 	if err != nil {
 		return err
 	}
-	p.Title.Text = fmt.Sprintf("La probabilidad para TC entre 0-%2.1f, dado H %2.1f-%2.1f.\n La integral en el intervalo seleccionado (%2.1f-%2.1f) es: %3.2f", x1[len(x1)-1], h1, h2, x2[0], x2[len(x2)-1], totalprob)
+	p.Title.Text = fmt.Sprintf("Densidad de probabilidad para TC entre 0-%2.1f, dado H %2.1f-%2.1f.\n La integral en el intervalo %2.1f-%2.1f (en rojo) es: %3.2f", x1[len(x1)-1], h1, h2, x2[0], x2[len(x2)-1], totalprob)
 	p.X.Label.Text = "TC|H"
 	p.Y.Label.Text = "Prob."
 	//fmt.Println(y1)     ///////////////////
