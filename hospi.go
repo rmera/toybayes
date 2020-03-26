@@ -5,7 +5,10 @@ import (
 	"html/template"
 	"image/color"
 	"net/http"
+	"path/filepath"
+	"sort"
 	"strconv"
+	"strings"
 
 	"gonum.org/v1/gonum/stat/distuv"
 	"gonum.org/v1/plot"
@@ -21,7 +24,7 @@ import (
 //such as Germany or S. Korea.
 
 //This has a lot of "teaching" comments.
-func bayes(par param) error {
+func bayes(par param) (string, error) {
 	//fmt.Println("Educational Bayes program")
 
 	//***********The next 4 variabes are for plotting only
@@ -71,21 +74,21 @@ func bayes(par param) error {
 	//fmt.Printf("The probability of having P(TC|H) in the range %d-%d, for H between %3.2f-%3.2f, with a true p for P(H|TC) of %4.3f is: %6.4f\n", par.Pl, par.Pu, par.Cl, par.Cu, par.Tp, totalprob)
 
 	//Now the plot.
-	err := plottingFuncCuatica(realcases, realcases[par.Pl:par.Pu+1], cdf, cdfbars, par.Cl, par.Cu, totalprob)
+	name, err := plottingFuncCuatica(realcases, realcases[par.Pl:par.Pu+1], cdf, cdfbars, par.Cl, par.Cu, totalprob)
 	if err != nil {
-		return err
+		return "", err
 	}
-	return nil
+	return name, nil
 
 }
 
 //*******The science ends here, the following are just functions to handle the making of the figure. It doesn't matter for
 //*******teaching purposes.
 
-func plottingFuncCuatica(x1, x2, y1, y2 []float64, h1, h2, totalprob float64) error {
+func plottingFuncCuatica(x1, x2, y1, y2 []float64, h1, h2, totalprob float64) (string, error) {
 	p, err := plot.New()
 	if err != nil {
-		return err
+		return "", err
 	}
 	p.Title.Text = fmt.Sprintf("Densidad de probabilidad para TC entre 0-%2.1f, dado H %2.1f-%2.1f.\n La integral en el intervalo %2.1f-%2.1f (en rojo) es: %3.2f", x1[len(x1)-1], h1, h2, x2[0], x2[len(x2)-1], totalprob)
 	p.X.Label.Text = "TC|H"
@@ -98,23 +101,28 @@ func plottingFuncCuatica(x1, x2, y1, y2 []float64, h1, h2, totalprob float64) er
 
 	l, err := plotter.NewScatter(linedata)
 	if err != nil {
-		return err
+		return "", err
 	}
 	//	l.LineStyle.Width = vg.Points(2)
 	l.GlyphStyle.Color = color.RGBA{B: 255, A: 255}
 	l.GlyphStyle.Radius = l.GlyphStyle.Radius * 0.3
 	s, err := plotter.NewScatter(pointsdata)
 	if err != nil {
-		return err
+		return "", err
 	}
 	s.GlyphStyle.Color = color.RGBA{R: 255, A: 255}
 
 	p.Add(s, l)
-	//plot to a PNG file.
-	if err := p.Save(8*vg.Inch, 8*vg.Inch, "./public/posterior.png"); err != nil {
-		return err
+	name, err := getName()
+	if err != nil {
+		return "", err
 	}
-	return nil
+
+	//plot to a PNG file
+	if err := p.Save(8*vg.Inch, 8*vg.Inch, "./public/"+name); err != nil {
+		return "", err
+	}
+	return "./public/" + name, nil
 }
 
 // randomPoints returns some random x, y points.
@@ -155,16 +163,28 @@ func main() {
 		}
 		if !ok {
 			//	http.Error(w, "Unable to parse input", http.StatusInternalServerError)
-			tmpl.Execute(w, struct{ Success bool }{false})
+			tmpl.Execute(w, struct {
+				Success   bool
+				ImageName string
+			}{Success: false})
 		}
 		// do something with details
-		err := bayes(details)
+		name, err := bayes(details)
 		if err != nil {
+			fmt.Println(err.Error()) ////////////////////
 			//	http.Error(w, "Unable Build the probability plot", http.StatusInternalServerError)
-			tmpl.Execute(w, struct{ Success bool }{false})
+			tmpl.Execute(w, struct {
+				Success   bool
+				ImageName string
+			}{Success: false})
 
 		}
-		tmpl.Execute(w, struct{ Success bool }{true})
+		data := struct {
+			Success   bool
+			ImageName string
+		}{Success: true, ImageName: name}
+
+		tmpl.Execute(w, data)
 	})
 
 	http.ListenAndServe(":8080", nil)
@@ -179,4 +199,25 @@ func errorwrap(inp string, ok *bool) float64 {
 		*ok = false
 	}
 	return i
+}
+
+func getName() (string, error) {
+	var files []int = make([]int, 1, 100)
+	files[0] = 0
+	names, err := filepath.Glob("./public/*.png")
+	if err != nil {
+		return "", err
+	}
+	for _, v := range names {
+		f := strings.Split(v, "/")
+		s := strings.Replace(f[len(f)-1], ".png", "", -1)
+		num, err := strconv.Atoi(s)
+		if err != nil {
+			continue //I don't mind other files.
+		}
+		files = append(files, num)
+	}
+	sort.Ints(files) //yeaah I don't care
+	return fmt.Sprintf("%d.png", files[len(files)-1]+1), nil
+
 }

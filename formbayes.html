@@ -1,32 +1,35 @@
 <!-- forms.html -->
 {{if .Success}}
     <h1>La distribucion posterior P(CT|H)</h1>
-	<img src="/public/posterior.png" alt="Posterior distribution" width="672" height="672">
+	<img src="{{.ImageName}}" alt="Posterior distribution" width="672" height="672">
+	<p style="text-align:justify;  width: 50%;" > El proposito de este programa es exclusivamente educativo, no pretende dar una prediccion realista de los casos de COVID19 </p>
+	<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>
+
 
 {{else}}
-    <h1>Calculate P(TC|H) in a given range if P(H|TC) is a known binomial</h1>
-	<p style="text-align:justify;  width: 50%;"> El teorema de Bayes nos permite estimar la probabilidad de A si B se cumple,
+    <h1>Estimacion Bayesiana de probabilidad: Ejemplo con COVID19</h1>
+	<p style="text-align:justify;  width: 70%;"> El teorema de Bayes nos permite estimar la probabilidad de A si B se cumple,
 	si conocemos la probabilidad de B si A se cumple (entre otros).</p>
-	<p style="text-align:justify; width: 50%;"> Por ejemplo: </p>
-	<p style="text-align:justify; width: 50%;">Sabemos que los casos totales de COVID19 son dificiles de determinar directamente, 
+	<p style="text-align:justify; width: 70%;"> Por ejemplo: </p>
+	<p style="text-align:justify; width: 70%;">Sabemos que los casos totales de COVID19 son dificiles de determinar directamente, 
 	puesto que es dificil testear a todos los pacientes asintomaticos. Es mucho 
 	mas facil determinar el numero de hospitalizados.</p>
-	<p style="text-align:justify; width: 50%;">Si conocemos el numero total de pacientes hospitalizados (serios o criticos) en Chile,
+	<p style="text-align:justify; width: 70%;">Si conocemos el numero total de pacientes hospitalizados (serios o criticos) en Chile,
 	y sabemos que porcentaje de pacientes requieres hospitaliacion (basados en paises que
 	tienen alta cobertura de testeo, como Alemania) podemo usar el teorema de Bayes para
 	estimar la probabilidad de que el numero de casos totales en Chile sea igual o mayor que
 	un numero cualquiera</p>
-	<p style="text-align:justify;  width: 50%;"> La probabilidad de tener, por ejemplo, 10 hospitalizados si tenemos 1000 casos totales es similar a la probabilidad de
+	<p style="text-align:justify;  width: 70%;"> La probabilidad de tener, por ejemplo, 10 hospitalizados si tenemos 1000 casos totales es similar a la probabilidad de
 	obtener un numero dado (digamos, 5) 10 veces si tiramos un  dados 1000 veces. Cual es esa probabilidad? Depende de cuantas caras
 	tenga el dado! La funcion En nuestro caso, el numero de caras del dado es el porecentaje de hospitalizacion, que sacamos de algun pais
 	con alta cobertura y suficiente tiempo para muestrear. La funcion matematica que nos da la probabilidad de obtener un numero X veces si tiramos
 	Y veces un dado de Z caras es la distribucion binomial</p>
-	<p style="text-align:justify;  width: 50%;"> Hagamos la prueba!  Completa los numeros en el formulario siguiente, y mira el resultado. </p>
-    <p style="text-align:justify;  width: 50%;"> Vamos a calcular la probabilidad de que el numero de enfermos en Chile este entre un limite inferior y superior para P(CT|H)</p>
+	<p style="text-align:justify;  width: 70%;"> Hagamos la prueba!  Completa los numeros en el formulario siguiente, y mira el resultado. </p>
+    <p style="text-align:justify;  width: 70%;"> Vamos a calcular la probabilidad de que el numero de enfermos en Chile este entre un limite inferior y superior para P(CT|H)</p>
 
-	<p> Si es que el numero de hosiptalizados (o fallecidos) en el pais esta entre H1 y H2  </p>
-	<p> Y el porcentaje real de hospitalizacion (o fatalidad) es de P %</p>
-	<p> El teorema de Bayes nos pide tambien una distribucion 'a priori', que vamos a tomar como constante </p>
+	<p style="text-align:justify;  width: 70%;"> Si es que el numero de hosiptalizados (o fallecidos) en el pais esta entre H1 y H2  </p>
+	<p style="text-align:justify;  width: 70%;"> Y el porcentaje real de hospitalizacion (o fatalidad) es de P %</p>
+	<p style="text-align:justify;  width: 70%;"> El teorema de Bayes nos pide tambien una distribucion 'a priori', que vamos a tomar como constante </p>
 
 
 
@@ -48,9 +51,9 @@
         <input type="submit">
     </form>
 
-	<p> El resultado va a ser P(CT|H) o la distribucion posterior</p>
-	<p> Este programa esta disponible en <a href="https://www.gitbhub.com/rmera/toybayes">www.github.com/rmera/toybayes</a></p>
-	<p> El proposito de este programa es exclusivamente educativo, no pretende dar una prediccion realista de los casos de COVID19 </p>
+	<p style="text-align:justify;  width: 70%;"> El resultado va a ser P(CT|H) o la distribucion posterior</p>
+	<p style="text-align:justify;  width: 50%;"> Este programa esta disponible en <a href="https://www.github.com/rmera/toybayes">www.github.com/rmera/toybayes</a></p>
+	<p style="text-align:justify;  width: 50%;" > El proposito de este programa es exclusivamente educativo, no pretende dar una prediccion realista de los casos de COVID19 </p>
 <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
 
 {{end}}
