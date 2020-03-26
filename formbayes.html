@@ -1,0 +1,27 @@
+<!-- forms.html -->
+{{if .Success}}
+    <h1>The posterior distribution</h1>
+	<img src="/public/posterior.png" alt="Posterior distribution" width="672" height="672">
+
+{{else}}
+    <h1>Calculate P(TC|H) in a given range if P(H|TC) is a known binomial</h1>
+
+
+    <form method="POST">
+        <label>Lower limit for P(TC|H):</label><br />
+        <input type="text" name="Pl"><br />
+        <label>Upper limit for P(TC|H):</label><br />
+        <input type="text" name="Pu"><br />
+
+        <label>Lower limit for P(H|TC):</label><br />
+        <input type="text" name="Cl"><br />
+        <label>Upper limit for P(H|TC):</label><br />
+        <input type="text" name="Cu"><br />
+
+        <label>True percentual "p" for P(H|TC):</label><br />
+        <input type="text" name="Tp"><br />
+
+
+        <input type="submit">
+    </form>
+{{end}}
